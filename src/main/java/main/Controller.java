@@ -1,13 +1,14 @@
 package main;
 
 import engine.DataGenerator;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.stream.IntStream;
 
 public class Controller {
 
@@ -19,6 +20,9 @@ public class Controller {
         myInterface.getNextButton().addActionListener(new NextActionListener());
         myInterface.getBackButton().addActionListener(new BackActionListener());
         myInterface.getOpenButton().addActionListener(new ChooseActionListener());
+        MyDragDropListener myDragDropListener = new MyDragDropListener();
+        myDragDropListener.setController(this);
+        myInterface.$$$getRootComponent$$$().setDropTarget(new DropTarget(jFrame, myDragDropListener));
         jFrame.setContentPane(myInterface.$$$getRootComponent$$$());
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.pack();
@@ -28,6 +32,7 @@ public class Controller {
 
     public void process(final String fileName){
         try {
+            jFrame.setTitle(fileName + " - CsvViewer");
             dg.setFileName(fileName);
             dg.setCsvTable(myInterface.getCsvTable());
             dg.generateItems();

@@ -3,20 +3,14 @@ package engine;
 import com.opencsv.CSVReader;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class DataGenerator {
     private String fileName;
     private CSVReader csvReader;
-    private JTable csvTable;
     private DefaultTableModel tblModel = new DefaultTableModel();
     private int position = 1;
     private boolean lock;
@@ -26,7 +20,6 @@ public class DataGenerator {
     }
 
     public void setCsvTable(JTable csvTable) throws FileNotFoundException {
-        this.csvTable = csvTable;
         csvReader = new CSVReader(new FileReader(fileName), ';', '"','\n', 0);
         String[] headers = read();
         tblModel.setColumnIdentifiers(headers);
