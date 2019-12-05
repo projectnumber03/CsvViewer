@@ -11,6 +11,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Controller {
 
@@ -94,8 +97,10 @@ public class Controller {
         @Override
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                myInterface.getCsvTable().requestFocus();
-                myInterface.getCsvTable().changeSelection(0, dg.getTblModel().findColumn(myInterface.getSearchField().getText()),false, false);
+                JTable table = myInterface.getCsvTable();
+                String column = IntStream.range(0, table.getColumnCount()).boxed().map(table::getColumnName).filter(s -> s.toUpperCase().contains(myInterface.getSearchField().getText().toUpperCase())).findFirst().orElse("");
+                table.requestFocus();
+                table.changeSelection(0, dg.getTblModel().findColumn(column),false, false);
             }
         }
 
