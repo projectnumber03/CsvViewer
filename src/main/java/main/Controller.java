@@ -7,19 +7,22 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 
 public class Controller {
 
-    final DataGenerator dg = new DataGenerator();
-    Interface myInterface = new Interface();
-    JFrame jFrame = new JFrame("CsvViewer");
+    private final DataGenerator dg = new DataGenerator();
+    private Interface myInterface = new Interface();
+    private JFrame jFrame = new JFrame("CsvViewer");
 
-    public void initialize() {
+    void initialize() {
         myInterface.getNextButton().addActionListener(new NextActionListener());
         myInterface.getBackButton().addActionListener(new BackActionListener());
         myInterface.getOpenButton().addActionListener(new ChooseActionListener());
+        myInterface.getSearchField().addKeyListener(new SearchFieldListener());
         MyDragDropListener myDragDropListener = new MyDragDropListener();
         myDragDropListener.setController(this);
         myInterface.$$$getRootComponent$$$().setDropTarget(new DropTarget(jFrame, myDragDropListener));
@@ -28,9 +31,10 @@ public class Controller {
         jFrame.pack();
         jFrame.setSize(720, 480);
         jFrame.setVisible(true);
+
     }
 
-    public void process(final String fileName){
+    void process(final String fileName){
         try {
             jFrame.setTitle(fileName + " - CsvViewer");
             dg.setFileName(fileName);
@@ -80,5 +84,22 @@ public class Controller {
                 process(file.getPath());
             }
         }
+    }
+
+    public class SearchFieldListener implements KeyListener{
+
+        @Override
+        public void keyTyped(KeyEvent e) { }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                myInterface.getCsvTable().requestFocus();
+                myInterface.getCsvTable().changeSelection(0, dg.getTblModel().findColumn(myInterface.getSearchField().getText()),false, false);
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) { }
     }
 }
